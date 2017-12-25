@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.snapp.common.dao.BrandDao">
+    <resultMap id="BaseResultMap" type="com.snapp.common.model.Brand">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="add_time" property="addTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="icon_url" property="iconUrl" jdbcType="VARCHAR"/>
+        <result column="prefix" property="prefix" jdbcType="VARCHAR"/>
+        <result column="sync_status" property="syncStatus" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Table">
+        brand
+    </sql>
+
+    <sql id="Base_Column_List">
+        id, add_time, update_time, status, name, icon_url, prefix, sync_status
+    </sql>
+
+    <sql id="Insert_Column">
+        name, icon_url, prefix, sync_status
+    </sql>
+
+    <sql id="Insert_Column_Value">
+        #{name}, #{iconUrl}, #{prefix}, #{syncStatus}
+    </sql>
+
+    <sql id="Batch_Insert_Column_Value">
+        #{item.name}, #{item.iconUrl}, #{item.prefix}, #{item.syncStatus}
+    </sql>
+
+    <insert id="insert" parameterType="java.util.Map">
+        INSERT INTO
+            <include refid="Table"/>
+            (
+            <include refid="Insert_Column"/>
+            )
+        VALUES
+            (
+            <include refid="Insert_Column_Value"/>
+            )
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO
+        <include refid="Table"/>
+        (
+        <include refid="Insert_Column"/>
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            <include refid="Batch_Insert_Column_Value"/>
+            )
+        </foreach>
+    </insert>
+    
+    <select id="getNoSyncOne" resultMap="BaseResultMap">
+        SELECT 
+            <include refid="Base_Column_List"/>
+        FROM
+            <include refid="Table"/>
+        WHERE
+            status = 1
+        AND
+            sync_status = 0
+        LIMIT 1
+    </select>
+
+    <update id="updateSyncStatus" parameterType="java.util.Map">
+        UPDATE
+            <include refid="Table"/>
+        SET
+            sync_status = #{syncStatus}
+        where
+            id = #{id}
+    </update>
+</mapper>

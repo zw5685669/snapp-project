@@ -1,0 +1,4 @@
+#use which profile
+spring:
+  profiles:
+    active: development
