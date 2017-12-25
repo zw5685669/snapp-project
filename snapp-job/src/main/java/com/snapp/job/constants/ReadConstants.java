@@ -10,6 +10,7 @@ package com.snapp.job.constants;
  */
 public class ReadConstants {
 
+
     /**
      * 请求url
      */
